@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import click
 
 def load_data():
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -65,16 +66,30 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     gan.compile(loss = 'binary_crossentropy', optimizer = 'adam')
     gan.fit(random_noise, noise_labels, batch_size = 32, epochs = 1)
 
-if __name__ == '__main__':
+@click.command()
+@click.argument('num-to-generate', type = int)
+@click.argument('num-epochs', type = int)
+@click.option('--image-save-dir', '-i', type = click.Path(exists = False, dir_okay = True, file_okay = False), default = None)
+@click.option('--model-save-dir', '-m', type = click.Path(exists = False, dir_okay = True, file_okay = False))
+def main(num_to_generate, num_epochs, image_save_dir, model_save_dir):
     generator = build_generator()
     discriminator = build_discriminator()
-    data = load_data()[0] / 256
+    data = load_data()[num_to_generate] / 256
 
-    for i in range(10):
+    for i in range(num_epochs):
         epoch_num = i + 1
         train_gan_epoch(generator, discriminator, data)
-        random_input = np.random.random((1, 100))
-        generated_image = generator.predict(random_input).reshape((28, 28)) * 256
-        plt.imsave(os.path.join('images', '0', f'epoch_{epoch_num}.png'), generated_image)
-        generator.save(os.path.join('models','model_0.h5'))
-        
+        if image_save_dir:
+            if not os.path.exists(os.path.join(image_save_dir, str(num_to_generate))):
+                os.makedirs(os.path.join(image_save_dir, str(num_to_generate)))
+            random_input = np.random.random((1,100))
+            generated_image = generator.predict(random_input).reshape((28,28)) * 256
+            plt.imsave(os.path.join(image_save_dir, str(num_to_generate, f'epoch_{epoch_num}.png')), generated_image)
+        if model_save_dir:
+            if not os.path.exists(model_save_dir):
+                os.makedirs(model_save_dir)
+            generator.save(os.path.join(model_save_dir, f'model_{epoch_num}.h5'))
+
+
+if __name__ == '__main__':
+    main()
