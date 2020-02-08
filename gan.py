@@ -49,7 +49,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     training_images = np.concatenate((data, fake_images))
     training_labels = np.concatenate((real_labels, fake_labels))
 
-    order = np.random.choice(np.arange(training_images.shape[0]), training_images.shape[0], replace = False)
+    order = np.random.choice(np.arange(training_images.shape[0]), int(training_images.shape[0] / 2), replace = False)
     training_images = training_images[order]
     training_labels = training_labels[order]
 
