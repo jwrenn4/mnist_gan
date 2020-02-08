@@ -78,6 +78,8 @@ def main(num_to_generate, num_epochs, image_save_dir, model_save_dir):
 
     for i in range(num_epochs):
         epoch_num = i + 1
+        if epoch_num % 5 == 0:
+            discriminator = build_discriminator()
         train_gan_epoch(generator, discriminator, data)
         if image_save_dir:
             if not os.path.exists(os.path.join(image_save_dir, str(num_to_generate))):
