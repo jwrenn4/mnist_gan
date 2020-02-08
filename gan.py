@@ -72,7 +72,7 @@ if __name__ == '__main__':
     for i in range(10):
         epoch_num = i + 1
         train_gan_epoch(generator, discriminator, data)
-        random_input = np.random.random(1, 100)
+        random_input = np.random.random((1, 100))
         generated_image = generator.predict(random_input).reshape((28, 28))
         plt.imsave(f'model_0_epoch_{epoch_num}.png', generated_image)
         generator.save('model_0.h5')
