@@ -83,8 +83,8 @@ def main(num_to_generate, num_epochs, image_save_dir, model_save_dir):
             if not os.path.exists(os.path.join(image_save_dir, str(num_to_generate))):
                 os.makedirs(os.path.join(image_save_dir, str(num_to_generate)))
             random_input = np.random.random((1,100))
-            generated_image = generator.predict(random_input).reshape((28,28)) * 256
-            plt.imsave(os.path.join(image_save_dir, str(num_to_generate, f'epoch_{epoch_num}.png')), generated_image)
+            generated_image = generator.predict(random_input).reshape(28,28) * 256
+            plt.imsave(os.path.join(image_save_dir, str(num_to_generate), f'epoch_{epoch_num}.png')), generated_image)
         if model_save_dir:
             if not os.path.exists(model_save_dir):
                 os.makedirs(model_save_dir)
