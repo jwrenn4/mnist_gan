@@ -52,7 +52,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     training_labels = training_labels[order]
 
     discriminator.compile(loss = 'binary_crossentropy', optimizer = 'adam')
-    discriminator.fit(training_images, training_labels, batch_size = 64, epochs = 1)
+    discriminator.fit(training_images, training_labels, batch_size = 16, epochs = 1)
 
     # now train the generator through the gan
     generator.trainable = True
