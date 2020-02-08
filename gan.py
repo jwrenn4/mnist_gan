@@ -59,7 +59,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     discriminator.trainable = False
 
     # generate noise to predict off of and labels
-    random_noise = np.random.random(data.shape[0], input_dimension)
+    random_noise = np.random.random((data.shape[0], input_dimension))
     noise_labels = np.zeros(data.shape[0]).reshape(-1, 1) + 0.05
     gan.compile(loss = 'binary_crossentropy', optimizer = 'adam')
     gan.fit(random_noise, noise_labels, batch_size = 16, epochs = 1)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     discriminator = build_discriminator()
     data = load_data()[0] / 256
 
-    for i in range(100):
+    for i in range(10):
         epoch_num = i + 1
         train_gan_epoch(generator, discriminator, data)
         random_input = np.random.random(1, 100)
