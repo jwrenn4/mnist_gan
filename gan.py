@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 def load_data():
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -74,6 +75,6 @@ if __name__ == '__main__':
         train_gan_epoch(generator, discriminator, data)
         random_input = np.random.random((1, 100))
         generated_image = generator.predict(random_input).reshape((28, 28))
-        plt.imsave(f'model_0_epoch_{epoch_num}.png', generated_image)
-        generator.save('model_0.h5')
+        plt.imsave(os.path.join('images', '0', f'epoch_{epoch_num}.png'))
+        generator.save(os.path.join('models','model_0.h5'))
         
