@@ -75,6 +75,6 @@ if __name__ == '__main__':
         train_gan_epoch(generator, discriminator, data)
         random_input = np.random.random((1, 100))
         generated_image = generator.predict(random_input).reshape((28, 28)) * 256
-        plt.imsave(os.path.join('images', '0', f'epoch_{epoch_num}.png'))
+        plt.imsave(os.path.join('images', '0', f'epoch_{epoch_num}.png'), generated_image)
         generator.save(os.path.join('models','model_0.h5'))
         
