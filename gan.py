@@ -51,7 +51,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     training_images = training_images[order]
     training_labels = training_labels[order]
 
-    discriminator.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+    discriminator.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
     discriminator.fit(training_images, training_labels, batch_size = 16, epochs = 1)
 
     # now train the generator through the gan
@@ -61,7 +61,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     # generate noise to predict off of and labels
     random_noise = np.random.random((data.shape[0], input_dimension))
     noise_labels = np.zeros(data.shape[0]).reshape(-1, 1) + 0.05
-    gan.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+    gan.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
     gan.fit(random_noise, noise_labels, batch_size = 16, epochs = 1)
 
 if __name__ == '__main__':
