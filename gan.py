@@ -43,8 +43,8 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
     # create the data to train off of
     fake_images = generator.predict(np.random.random((data.shape[0], input_dimension)))
 
-    real_labels = np.zeros(data.shape[0]).reshape(-1, 1) + 0.05
-    fake_labels = np.ones(data.shape[0]).reshape(-1, 1) - 0.05
+    real_labels = np.zeros(data.shape[0]).reshape(-1, 1)
+    fake_labels = np.ones(data.shape[0]).reshape(-1, 1)
     training_images = np.concatenate((data, fake_images))
     training_labels = np.concatenate((real_labels, fake_labels))
 
@@ -61,8 +61,8 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100):
 
     # generate noise to predict off of and labels
     random_noise = np.random.random((data.shape[0], input_dimension))
-    noise_labels = np.zeros(data.shape[0]).reshape(-1, 1) + 0.05
-    gan.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
+    noise_labels = np.zeros(data.shape[0]).reshape(-1, 1)
+    gan.compile(loss = 'binary_crossentropy', optimizer = 'adam')
     gan.fit(random_noise, noise_labels, batch_size = 32, epochs = 1)
 
 if __name__ == '__main__':
