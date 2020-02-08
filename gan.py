@@ -88,7 +88,7 @@ def main(num_to_generate, num_epochs, image_save_dir, model_save_dir):
         if model_save_dir:
             if not os.path.exists(model_save_dir):
                 os.makedirs(model_save_dir)
-            generator.save(os.path.join(model_save_dir, f'model_{i}.h5'))
+            generator.save(os.path.join(model_save_dir, f'model_{num_to_generate}.h5'))
 
 
 if __name__ == '__main__':
