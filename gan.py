@@ -15,7 +15,7 @@ def build_generator(input_dimension = 100):
     x = tf.keras.layers.Dense(28*28, activation = 'relu')(input_layer)
     x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
     x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
-    x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
+    x = tf.keras.layers.Dense(28*28, activation = 'sigmoid')(x)
     output_layer = tf.keras.layers.Reshape((28, 28, 1))(x)
     return tf.keras.models.Model(inputs = input_layer, outputs = output_layer)
 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         epoch_num = i + 1
         train_gan_epoch(generator, discriminator, data)
         random_input = np.random.random((1, 100))
-        generated_image = generator.predict(random_input).reshape((28, 28))
+        generated_image = generator.predict(random_input).reshape((28, 28)) * 256
         plt.imsave(os.path.join('images', '0', f'epoch_{epoch_num}.png'))
         generator.save(os.path.join('models','model_0.h5'))
         
