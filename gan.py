@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -81,8 +83,9 @@ def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir
         epoch_num = i + 1
         train_gan_epoch(generator, discriminator, data, epoch_size = epoch_size)
         if image_save_dir:
-            if not os.path.exists(os.path.join(image_save_dir, str(num_to_generate))):
-                os.makedirs(os.path.join(image_save_dir, str(num_to_generate)))
+            this_image_dir = os.path.join(image_save_dir, str(num_to_generate))
+            if not os.path.exists(this_image_dir):
+                os.makedirs(this_image_dir)
             random_input = np.random.random((1,100))
             generated_image = generator.predict(random_input).reshape(28,28) * 256
             plt.imsave(os.path.join(image_save_dir, str(num_to_generate), f'epoch_{epoch_num}.png'), generated_image)
