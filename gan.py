@@ -53,7 +53,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     training_images = training_images[order]
     training_labels = training_labels[order]
 
-    discriminator.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+    discriminator.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
     discriminator.fit(training_images, training_labels, batch_size = 128, epochs = 1)
 
     # now train the generator through the gan
@@ -63,7 +63,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     # generate noise to predict off of and labels
     random_noise = np.random.random((epoch_size, input_dimension))
     noise_labels = np.zeros(epoch_size).reshape(-1, 1)
-    gan.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+    gan.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
     gan.fit(random_noise, noise_labels, batch_size = 128, epochs = 1)
 
 @click.command()
@@ -79,7 +79,7 @@ def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir
 
     for i in range(num_epochs):
         epoch_num = i + 1
-        train_gan_epoch(generator, discriminator, data, epoch_size)
+        train_gan_epoch(generator, discriminator, data, epoch_size = epoch_size)
         if image_save_dir:
             if not os.path.exists(os.path.join(image_save_dir, str(num_to_generate))):
                 os.makedirs(os.path.join(image_save_dir, str(num_to_generate)))
