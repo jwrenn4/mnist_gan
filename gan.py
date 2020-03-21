@@ -18,6 +18,8 @@ def build_generator(input_dimension = 100):
     x = tf.keras.layers.Dense(28*28, activation = 'relu')(input_layer)
     x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
     x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
+    x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
+    x = tf.keras.layers.Dense(28*28, activation = 'relu')(x)
     x = tf.keras.layers.Dense(28*28, activation = 'sigmoid')(x)
     output_layer = tf.keras.layers.Reshape((28, 28, 1))(x)
     return tf.keras.models.Model(inputs = input_layer, outputs = output_layer)
@@ -27,7 +29,8 @@ def build_discriminator():
     x = tf.keras.layers.Conv2D(512, 3, padding = 'same')(input_layer)
     x = tf.keras.layers.Conv2D(512, 3, padding = 'same')(x)
     x = tf.keras.layers.Flatten()(x)
-    x = tf.keras.layers.Dense(8, activation = 'relu')(x)
+    x = tf.keras.layers.Dense(256, activation = 'relu')(x)
+    x = tf.keras.layers.Dense(256, activation = 'relu')(x)
     output_layer = tf.keras.layers.Dense(1, activation = 'sigmoid')(x)
     return tf.keras.models.Model(inputs = input_layer, outputs = output_layer)
 
@@ -71,7 +74,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
 @click.command()
 @click.argument('num-to-generate', type = int)
 @click.argument('num-epochs', type = int)
-@click.option('--epoch-size', type = int, default = 512)
+@click.option('--epoch-size', type = int, default = 256)
 @click.option('--image-save-dir', '-i', type = click.Path(exists = False, dir_okay = True, file_okay = False), default = None)
 @click.option('--model-save-dir', '-m', type = click.Path(exists = False, dir_okay = True, file_okay = False))
 def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir):
