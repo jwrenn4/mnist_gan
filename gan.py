@@ -49,16 +49,12 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     discriminator.trainable = True
 
     # create the data to train off of
-    fake_images = generator.predict(np.random.random((data.shape[0], input_dimension)))
-
-    real_labels = np.zeros(data.shape[0]).reshape(-1, 1)
-    fake_labels = np.ones(data.shape[0]).reshape(-1, 1)
-    training_images = np.concatenate((data, fake_images))
+    real_images = data[np.random.choice(np.arange(data.shape[0]), int(epoch_size), replace = True),:]
+    fake_images = generator.predict(np.random.random((int(epoch_size), input_dimension)))
+    real_labels = np.zeros(real_images.shape[0]).reshape(-1, 1)
+    fake_labels = np.ones(fake_images.shape[0]).reshape(-1, 1)
+    training_images = np.concatenate((real_images, fake_images))
     training_labels = np.concatenate((real_labels, fake_labels))
-
-    order = np.random.choice(np.arange(training_images.shape[0]), epoch_size * 2, replace = True)
-    training_images = training_images[order]
-    training_labels = training_labels[order]
 
     discriminator.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
     discriminator.fit(training_images, training_labels, batch_size = 128, epochs = 1)
