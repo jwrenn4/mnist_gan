@@ -26,8 +26,10 @@ def build_generator(input_dimension = 100):
 
 def build_discriminator():
     input_layer = tf.keras.layers.Input((28,28,1))
-    x = tf.keras.layers.Conv2D(512, 3, padding = 'same')(input_layer)
-    x = tf.keras.layers.Conv2D(512, 3, padding = 'same')(x)
+    x = tf.keras.layers.Conv2D(256, 3, padding = 'same')(input_layer)
+    x = tf.keras.layers.Conv2D(256, 3, padding = 'same')(x)
+    x = tf.keras.layers.Conv2D(256, 3, padding = 'same')(x)
+    x = tf.keras.layers.Conv2D(256, 3, padding = 'same')(x)
     x = tf.keras.layers.Flatten()(x)
     x = tf.keras.layers.Dense(256, activation = 'relu')(x)
     x = tf.keras.layers.Dense(256, activation = 'relu')(x)
@@ -54,11 +56,11 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     training_images = np.concatenate((data, fake_images))
     training_labels = np.concatenate((real_labels, fake_labels))
 
-    order = np.random.choice(np.arange(training_images.shape[0]), epoch_size, replace = False)
+    order = np.random.choice(np.arange(training_images.shape[0]), epoch_size * 2, replace = True)
     training_images = training_images[order]
     training_labels = training_labels[order]
 
-    discriminator.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
+    discriminator.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
     discriminator.fit(training_images, training_labels, batch_size = 128, epochs = 1)
 
     # now train the generator through the gan
@@ -68,7 +70,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     # generate noise to predict off of and labels
     random_noise = np.random.random((epoch_size, input_dimension))
     noise_labels = np.zeros(epoch_size).reshape(-1, 1)
-    gan.compile(loss = 'binary_crossentropy', optimizer = 'nadam')
+    gan.compile(loss = 'binary_crossentropy', optimizer = 'nadam', metrics = ['accuracy'])
     gan.fit(random_noise, noise_labels, batch_size = 128, epochs = 1)
 
 @click.command()
@@ -84,6 +86,7 @@ def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir
 
     for i in range(num_epochs):
         epoch_num = i + 1
+        print(f'\n\nEpoch {epoch_num}')
         train_gan_epoch(generator, discriminator, data, epoch_size = epoch_size)
         if image_save_dir:
             this_image_dir = os.path.join(image_save_dir, str(num_to_generate))
