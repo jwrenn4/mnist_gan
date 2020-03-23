@@ -51,13 +51,13 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     # create the data to train off of
     real_images = data[np.random.choice(np.arange(data.shape[0]), int(epoch_size / 2), replace = True),:]
     fake_images = generator.predict(np.random.random((int(epoch_size / 2), input_dimension)))
-    real_labels = np.zeros(real_images.shape[0]).reshape(-1, 1)
-    fake_labels = np.ones(fake_images.shape[0]).reshape(-1, 1)
+    real_labels = np.zeros(real_images.shape[0]).reshape(-1, 1) + 0.05
+    fake_labels = np.ones(fake_images.shape[0]).reshape(-1, 1) - 0.05
     training_images = np.concatenate((real_images, fake_images))
     training_labels = np.concatenate((real_labels, fake_labels))
 
     discriminator.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
-    discriminator.fit(training_images, training_labels, batch_size = 128, epochs = 1)
+    discriminator.fit(training_images, training_labels, batch_size = 32, epochs = 1)
 
     # now train the generator through the gan
     generator.trainable = True
@@ -67,7 +67,7 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     random_noise = np.random.random((epoch_size, input_dimension))
     noise_labels = np.zeros(epoch_size).reshape(-1, 1)
     gan.compile(loss = 'binary_crossentropy', optimizer = 'nadam', metrics = ['accuracy'])
-    gan.fit(random_noise, noise_labels, batch_size = 128, epochs = 1)
+    gan.fit(random_noise, noise_labels, batch_size = 32, epochs = 1)
 
 @click.command()
 @click.argument('num-to-generate', type = int)
