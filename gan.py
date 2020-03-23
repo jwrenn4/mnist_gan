@@ -75,7 +75,8 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
 @click.option('--epoch-size', type = int, default = 256)
 @click.option('--image-save-dir', '-i', type = click.Path(exists = False, dir_okay = True, file_okay = False), default = None)
 @click.option('--model-save-dir', '-m', type = click.Path(exists = False, dir_okay = True, file_okay = False))
-def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir):
+@click.option('--save-every', '-s', type = int, default = 5)
+def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir, save_every):
     generator = build_generator()
     discriminator = build_discriminator()
     data = load_data()[num_to_generate] / 256
@@ -85,16 +86,18 @@ def main(num_to_generate, num_epochs, epoch_size, image_save_dir, model_save_dir
         print(f'\n\nEpoch {epoch_num}')
         train_gan_epoch(generator, discriminator, data, epoch_size = epoch_size)
         if image_save_dir:
-            this_image_dir = os.path.join(image_save_dir, str(num_to_generate))
-            if not os.path.exists(this_image_dir):
-                os.makedirs(this_image_dir)
-            random_input = np.random.random((1,100))
-            generated_image = generator.predict(random_input).reshape(28,28) * 256
-            plt.imsave(os.path.join(image_save_dir, str(num_to_generate), f'epoch_{epoch_num}.png'), generated_image)
-        if model_save_dir:
-            if not os.path.exists(model_save_dir):
-                os.makedirs(model_save_dir)
-            generator.save(os.path.join(model_save_dir, f'model_{num_to_generate}.h5'))
+            if epoch_num % save_every == 0:
+                print('Saving sample image')
+                this_image_dir = os.path.join(image_save_dir, str(num_to_generate))
+                if not os.path.exists(this_image_dir):
+                    os.makedirs(this_image_dir)
+                random_input = np.random.random((1,100))
+                generated_image = generator.predict(random_input).reshape(28,28) * 256
+                plt.imsave(os.path.join(image_save_dir, str(num_to_generate), f'epoch_{epoch_num}.png'), generated_image)
+    if model_save_dir:
+        if not os.path.exists(model_save_dir):
+            os.makedirs(model_save_dir)
+        generator.save(os.path.join(model_save_dir, f'model_{num_to_generate}.h5'))
 
 
 if __name__ == '__main__':
