@@ -8,7 +8,7 @@
 SCRIPT=${1}
 IMAGEDIR=${2}
 MODELDIR=${3}
-EPOCHSIZE=16384
+EPOCHSIZE=256
 NUMEPOCHS=100
 
 for NUMBER in {0..9}
@@ -17,8 +17,8 @@ do
     python $SCRIPT $NUMBER $NUMEPOCHS --epoch-size $EPOCHSIZE -i $IMAGEDIR -m $MODELDIR
     if [ $? -ne 0 ]
     then
-	    echo "Something went wrong generating number $NUMBER"
-	    exit 1
+	echo "Something went wrong generating number $NUMBER"
+	exit 1
     fi
 done
 exit 0
