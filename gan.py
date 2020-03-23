@@ -49,8 +49,8 @@ def train_gan_epoch(generator, discriminator, data, input_dimension = 100, epoch
     discriminator.trainable = True
 
     # create the data to train off of
-    real_images = data[np.random.choice(np.arange(data.shape[0]), int(epoch_size), replace = True),:]
-    fake_images = generator.predict(np.random.random((int(epoch_size), input_dimension)))
+    real_images = data[np.random.choice(np.arange(data.shape[0]), int(epoch_size / 2), replace = True),:]
+    fake_images = generator.predict(np.random.random((int(epoch_size / 2), input_dimension)))
     real_labels = np.zeros(real_images.shape[0]).reshape(-1, 1)
     fake_labels = np.ones(fake_images.shape[0]).reshape(-1, 1)
     training_images = np.concatenate((real_images, fake_images))
